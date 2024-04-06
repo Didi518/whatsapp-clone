@@ -36,7 +36,7 @@ const LeftPanel = () => {
             />
             <Input
               type="text"
-              placeholder="Search or start a new chat"
+              placeholder="Chercher ou commencer un chat"
               className="pl-10 py-2 text-sm w-full rounded shadow-sm bg-gray-primary focus-visible:ring-transparent"
             />
           </div>
