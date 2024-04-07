@@ -7,7 +7,6 @@ import { MessageSeenSvg } from '@/lib/svgs'
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { api } from '../../../convex/_generated/api'
-import { cp } from 'fs'
 
 const Conversation = ({ conversation }: { conversation: any }) => {
   const conversationImage = conversation.groupImage || conversation.image

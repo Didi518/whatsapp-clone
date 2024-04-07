@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useConversationStore } from '@/store/chat-store'
 
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
@@ -34,6 +35,8 @@ const UserListDialog = () => {
   const generateUploadUrl = useMutation(api.conversations.generateUploadUrl)
   const me = useQuery(api.users.getMe)
   const users = useQuery(api.users.getUsers)
+
+  const { setSelectedConversation } = useConversationStore()
 
   const handleCreateConversation = async () => {
     if (selectedUsers.length === 0) return
@@ -61,7 +64,7 @@ const UserListDialog = () => {
 
         const { storageId } = await result.json()
 
-        await createConversation({
+        conversationId = await createConversation({
           participants: [...selectedUsers, me?._id!],
           isGroup: true,
           admin: me?._id!,
@@ -75,7 +78,20 @@ const UserListDialog = () => {
       setGroupName('')
       setSelectedImage(null)
 
-      //TODO: mettre à jour l'état global nommé "selectedConversation"
+      const conversationName = isGroup
+        ? groupName
+        : users?.find((user) => user._id === selectedUsers[0])?.name
+
+      setSelectedConversation({
+        _id: conversationId,
+        participants: selectedUsers,
+        isGroup,
+        image: isGroup
+          ? renderedImage
+          : users?.find((user) => user._id === selectedUsers[0])?.name,
+        name: conversationName,
+        admin: me?._id!,
+      })
     } catch (error) {
       toast.error('Echec de la création de la conversation')
       console.error(error)

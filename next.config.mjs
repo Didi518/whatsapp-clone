@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [{ hostname: 'robust-wren-358.convex.cloud' }],
+  },
+}
 
-export default nextConfig;
+export default nextConfig
