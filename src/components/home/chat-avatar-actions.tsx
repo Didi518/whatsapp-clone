@@ -1,10 +1,9 @@
-import toast from 'react-hot-toast'
+import { IMessage, useConversationStore } from '@/store/chat-store'
 import { useMutation } from 'convex/react'
 import { Ban, LogOut } from 'lucide-react'
-
-import { IMessage, useConversationStore } from '@/store/chat-store'
-
+import toast from 'react-hot-toast'
 import { api } from '../../../convex/_generated/api'
+import React from 'react'
 
 type ChatAvatarActionsProps = {
   message: IMessage
@@ -20,11 +19,13 @@ const ChatAvatarActions = ({ me, message }: ChatAvatarActionsProps) => {
   )
   const kickUser = useMutation(api.conversations.kickUser)
   const createConversation = useMutation(api.conversations.createConversation)
+  const fromAI = message.sender?.name === 'ChatGPT'
+  const isGroup = selectedConversation?.isGroup
 
-  const handleClickUser = async (e: React.MouseEvent) => {
+  const handleKickUser = async (e: React.MouseEvent) => {
+    if (fromAI) return
     e.stopPropagation()
     if (!selectedConversation) return
-
     try {
       await kickUser({
         conversationId: selectedConversation._id,
@@ -38,11 +39,13 @@ const ChatAvatarActions = ({ me, message }: ChatAvatarActionsProps) => {
         ),
       })
     } catch (error) {
-      toast.error("Echec du kick de l'utilisateur")
+      toast.error('Failed to kick user')
     }
   }
 
   const handleCreateConversation = async () => {
+    if (fromAI) return
+
     try {
       const conversationId = await createConversation({
         isGroup: false,
@@ -58,7 +61,7 @@ const ChatAvatarActions = ({ me, message }: ChatAvatarActionsProps) => {
         image: message.sender.image,
       })
     } catch (error) {
-      toast.error('Echec lors de la création de la conversation')
+      toast.error('Failed to create conversation')
     }
   }
 
@@ -67,17 +70,19 @@ const ChatAvatarActions = ({ me, message }: ChatAvatarActionsProps) => {
       className="text-[11px] flex gap-4 justify-between font-bold cursor-pointer group"
       onClick={handleCreateConversation}
     >
-      {message.sender.name}
-      {!isMember && <Ban size={16} className="text-red-500" />}
-      {isMember && selectedConversation?.admin === me._id && (
+      {isGroup && message.sender.name}
+
+      {!isMember && !fromAI && isGroup && (
+        <Ban size={16} className="text-red-500" />
+      )}
+      {isGroup && isMember && selectedConversation?.admin === me._id && (
         <LogOut
           size={16}
           className="text-red-500 opacity-0 group-hover:opacity-100"
-          onClick={handleClickUser}
+          onClick={handleKickUser}
         />
       )}
     </div>
   )
 }
-
 export default ChatAvatarActions
