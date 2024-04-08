@@ -13,7 +13,7 @@ const ChatPlaceHolder = () => {
         </p>
         <p className="w-1/2 text-center text-gray-primary text-sm text-muted-foreground">
           Passez vos appels, partagez vos écrans et ayez une meilleure
-          expérience en téléchargeant l'application Windows.
+          expérience en téléchargeant l&apos;application Windows.
         </p>
 
         <Button className="rounded-full my-5 bg-green-primary hover:bg-green-secondary">
