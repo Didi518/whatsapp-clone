@@ -7,6 +7,7 @@ import { IMessage, useConversationStore } from '@/store/chat-store'
 
 import ChatBubbleAvatar from './chat-bubble-avatar'
 import DateIndicator from './date-indicator'
+import ChatAvatarActions from './chat-avatar-actions'
 import { Dialog, DialogContent, DialogDescription } from '../ui/dialog'
 
 type ChayBubbleProps = {
@@ -59,6 +60,7 @@ const ChatBubble = ({ me, message, previousMessage }: ChayBubbleProps) => {
             className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}
           >
             <OtherMessageIndicator />
+            {isGroup && <ChatAvatarActions message={message} me={me} />}
             {renderMessageContent()}
             {open && (
               <ImageDialog

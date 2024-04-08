@@ -1,4 +1,6 @@
 'use client'
+
+import { useConvexAuth } from 'convex/react'
 import { Video, X } from 'lucide-react'
 
 import { useConversationStore } from '@/store/chat-store'
@@ -12,6 +14,10 @@ import GroupMembersDialog from './group-members-dialog'
 const RightPanel = () => {
   const { selectedConversation, setSelectedConversation } =
     useConversationStore()
+  const { isLoading } = useConvexAuth()
+
+  if (isLoading) return null
+
   if (!selectedConversation) return <ChatPlaceHolder />
 
   const conversationName =
@@ -35,7 +41,11 @@ const RightPanel = () => {
             </Avatar>
             <div className="flex flex-col">
               <p>{conversationName}</p>
-              {selectedConversation.isGroup && <GroupMembersDialog selectedConversation={selectedConversation} />}
+              {selectedConversation.isGroup && (
+                <GroupMembersDialog
+                  selectedConversation={selectedConversation}
+                />
+              )}
             </div>
           </div>
 
